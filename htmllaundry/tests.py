@@ -2,7 +2,32 @@ import unittest
 import lxml.etree
 from htmllaundry.utils import RemoveEmptyTags
 from htmllaundry.utils import ForceLinkTarget
+from htmllaundry.utils import StripMarkup
 from htmllaundry.utils import sanitize
+
+class Mock:
+    pass
+
+
+class StripMarkupTests(unittest.TestCase):
+    def testEmpty(self):
+        obj=Mock()
+        obj.description=u""
+        self.assertEqual(StripMarkup(u""), u"")
+
+    def testNoMarkup(self):
+        self.assertEqual(StripMarkup(u"Test"), u"Test")
+
+    def testSingleTag(self):
+        self.assertEqual(StripMarkup(u"Test <em>me</me>"), u"Test me")
+
+    def testMultipleTags(self):
+        self.assertEqual(StripMarkup(u"Test <em>me</me> <strong>now</strong>"),
+                         u"Test me now")
+
+    def testStrayBracket(self):
+        self.assertEqual(StripMarkup(u"Test <em>me</em> >") , u"Test me >")
+
 
 
 class RemoveEmptyTagsTests(unittest.TestCase):

@@ -4,6 +4,8 @@ Changelog
 1.1 - February 5, 2010
 ----------------------
 
+* Add a simple StripMarkup method.
+
 * Add ZCML necessary for z3c.form integration.
 
 

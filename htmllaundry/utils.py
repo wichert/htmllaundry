@@ -1,10 +1,18 @@
+import re
 from lxml import etree
 from lxml import html
 from htmllaundry.cleaners import DocumentCleaner
 
 
+TAG = re.compile(u"<.*?>")
 ANCHORS = etree.XPath("descendant-or-self::a | descendant-or-self::x:a",
                       namespaces={'x':html.XHTML_NAMESPACE})
+
+
+def StripMarkup(markup):
+    """Strip all markup from a HTML fragment."""
+    return TAG.sub(u"", markup)
+
 
 
 def ForceLinkTarget(doc, target="_blank"):
