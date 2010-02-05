@@ -37,6 +37,13 @@ includes three cleaners:
   HTML elements, and is designed to be useful for user provided comments.
 
 
+If you want to go all the way you can also use ``StripMarkup`` to strip
+all markup from your input::
+
+  >>> from htmllaundy import StripMarkup
+  >>> StripMarkup('Hello, <em>world</em>')
+  'Hello, world'
+
 
 z3c.form integration
 ====================
