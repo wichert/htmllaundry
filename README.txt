@@ -50,6 +50,11 @@ extra for this package::
        ...
        ],
 
+In addition you will need to load the ZCML. In your ``configure.zcml`` add
+a line like this::
+
+  <include package="htmllaundry" />
+ 
 You can then use the `HtmlText` field type in your schemas. For example::
 
   from zope.interface import Interface
@@ -65,7 +70,7 @@ You can then use the `HtmlText` field type in your schemas. For example::
               title = _(u"Description"),
             required = True)
 
-Please note that using `HtmlText` will not automatically give you a WYSYWIG
+Please note that using ``HtmlText`` will not automatically give you a WYSYWIG
 widget.
 
 

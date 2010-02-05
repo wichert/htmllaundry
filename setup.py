@@ -5,7 +5,8 @@ version = "1.1"
 setup(name="htmllaundry",
       version=version,
       description="Simple HTML cleanup utilities",
-      long_description=open("README.txt").read(),
+      long_description=open("README.txt").read()+"\n\n"+
+                       open("CHANGES.txt").read(),
       classifiers=[
           "Intended Audience :: Developers",
           "License :: OSI Approved :: BSD License",
@@ -21,7 +22,7 @@ setup(name="htmllaundry",
       license="BSD",
       packages=find_packages(exclude=["tests"]),
       include_package_data=True,
-      zip_safe=True,
+      zip_safe=False,
       install_requires=[
           "lxml",
       ],

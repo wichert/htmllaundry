@@ -1,0 +1,6 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+    <adapter factory=".z3cform.HtmlDataConverter" />
+
+</condigure>
+
