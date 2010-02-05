@@ -1,0 +1,14 @@
+Changelog
+=========
+
+1.1 - February 5, 2010
+----------------------
+
+* Add ZCML necessary for z3c.form integration.
+
+
+1.0 - February 5, 2010
+----------------------
+
+* First release
+
