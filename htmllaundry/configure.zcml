@@ -2,5 +2,5 @@
 
     <adapter factory=".z3cform.HtmlDataConverter" />
 
-</condigure>
+</configure>
 
