@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.2 - Unreleased
-----------------
+1.2 - February 15, 2010
+-----------------------
 
 * Fix a typo in the documentation.
 
