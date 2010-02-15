@@ -17,7 +17,7 @@ All cleanup routines can be invoked through the single ``sanitize`` function.
 This functions takes an input string as input and will return a cleaned up
 version of that string. Here is a simple example::
 
-  >>> from htmllaundy import sanitize
+  >>> from htmllaundry import sanitize
   >>> sanitize('Hello, <em>world</em>')
   '<p>Hello, <em>world</em></p>'
 
@@ -25,22 +25,22 @@ The sanitize method takes an extra optional parameter with a lxml Cleaner
 instance, which can be used to use different filtering rules. htmllaundry
 includes three cleaners:
 
-* ``htmllaundy.cleaners.DocumentCleaner``, which is the default cleaner. This
+* ``htmllaundry.cleaners.DocumentCleaner``, which is the default cleaner. This
   cleaner will allow most safe tags, while stripping out inline styles and
   insecure markup.
 
-* ``htmllaundy.cleaners.LineCleaner`` is a more strict cleaner which only
+* ``htmllaundry.cleaners.LineCleaner`` is a more strict cleaner which only
   allows a few inline elements. This is useful in places where you only
   want to accept single-line input, for example in document titles.
 
-* ``htmllaundy.cleaners.CommentCleaner`` only allows a very limited set of
+* ``htmllaundry.cleaners.CommentCleaner`` only allows a very limited set of
   HTML elements, and is designed to be useful for user provided comments.
 
 
 If you want to go all the way you can also use ``StripMarkup`` to strip
 all markup from your input::
 
-  >>> from htmllaundy import StripMarkup
+  >>> from htmllaundry import StripMarkup
   >>> StripMarkup('Hello, <em>world</em>')
   'Hello, world'
 
