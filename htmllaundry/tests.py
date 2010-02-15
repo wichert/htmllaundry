@@ -44,15 +44,12 @@ class RemoveEmptyTagsTests(unittest.TestCase):
 
     def testRemoveParagraphWithWhitespace(self):
         self.assertEqual(self._remove(u"<div><p>  </p></div>"), u"<div/>")
-
-    def testKeepEmptyBreakElement(self):
-        self.assertEqual(self._remove(u"<div><br/></div>"), u"<div><br/></div>")
         
     def testKeepEmptyImageElement(self):
         self.assertEqual(self._remove(u"<div><img src='image'/></div>"), u'<div><img src="image"/></div>')
 
     def testCollapseBreaks(self):
-        self.assertEqual(self._remove(u"<div><br/><br/></div>"), u"<div><br/></div>")
+        self.assertEqual(self._remove(u"<div>one<br/><br/>two</div>"), u"<div>one<br/>two</div>")
 
     def testNestedData(self):
         self.assertEqual(self._remove(u"<div><h3><bad/></h3> <p>Test</p></div>"), u"<div><p>Test</p></div>")
@@ -61,6 +58,8 @@ class RemoveEmptyTagsTests(unittest.TestCase):
         self.assertEqual(self._remove(u"<body>One<br/> two<br/> three</body>"),
                                       u"<body>One<br/> two<br/> three</body>")
 
+    def testTrailingBreak(self):
+        self.assertEqual(self._remove(u"<div>Test <br/></div>"), u"<div>Test </div>")
 
 
 

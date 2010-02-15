@@ -6,6 +6,8 @@ Changelog
 
 * Fix a typo in the documentation.
 
+* Strip trailing breaks.
+
 
 1.1 - February 5, 2010
 ----------------------

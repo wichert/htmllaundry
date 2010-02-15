@@ -46,13 +46,15 @@ def RemoveEmptyTags(doc):
         victims=[]
         for el in doc.iter():
             if el.tag=="br" and not el.tail:
-                try:
-                    preceding=el.itersiblings(preceding=True).next()
-                    if preceding.tag==el.tag:
-                        victims.append(el)
-                        continue
-                except StopIteration:
-                    pass
+                preceding=el.getprevious()
+                if preceding is not None and preceding.tag==el.tag:
+                    victims.append(el)
+                    continue
+
+                next=el.getnext()
+                if next is None or next.tag==el.tag:
+                    victims.append(el)
+                    continue
 
             if el.tag in legal_empty_tags:
                 continue
