@@ -79,6 +79,34 @@ def RemoveEmptyTags(doc):
 
 
 
+def StripOuterBreaks(doc):
+    """Remove any toplevel break elements."""
+    victims=[]
+
+    for i in range(len(doc)):
+        el=doc[i]
+        if el.tag=="br":
+            if el.tail:
+                previous=el.getprevious()
+                if previous is not None:
+                    if previous.tail:
+                        previous.tail+=el.tail
+                    else:
+                        previous.tail=el.tail
+                else:
+                    parent=el.getparent()
+                    if parent.text:
+                        parent.text+=el.tail
+                    else:
+                        parent.text=el.tail
+
+            victims.append(el)
+
+    for victim in victims:
+        victim.getparent().remove(victim)
+
+
+
 def WrapText(doc):
     """Make sure there is no unwrapped text at the top level. Any bare text
     found is wrapped in a `<p>` element.
@@ -116,6 +144,7 @@ def sanitize(input, cleaner=DocumentCleaner):
 
     cleaned=cleaner.clean_html(body)
     RemoveEmptyTags(cleaned)
+    StripOuterBreaks(cleaned)
     WrapText(cleaned)
     ForceLinkTarget(cleaned)
 

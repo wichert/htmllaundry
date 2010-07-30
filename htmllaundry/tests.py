@@ -1,7 +1,5 @@
 import unittest
 import lxml.etree
-from htmllaundry.utils import RemoveEmptyTags
-from htmllaundry.utils import ForceLinkTarget
 from htmllaundry.utils import StripMarkup
 from htmllaundry.utils import sanitize
 
@@ -32,6 +30,7 @@ class StripMarkupTests(unittest.TestCase):
 
 class RemoveEmptyTagsTests(unittest.TestCase):
     def _remove(self, str):
+        from htmllaundry.utils import RemoveEmptyTags
         fragment=lxml.etree.fromstring(str)
         fragment=RemoveEmptyTags(fragment)
         return lxml.etree.tostring(fragment, encoding=unicode)
@@ -65,6 +64,7 @@ class RemoveEmptyTagsTests(unittest.TestCase):
 
 class ForceLinkTargetTests(unittest.TestCase):
     def _force(self, str, target="_blank"):
+        from htmllaundry.utils import ForceLinkTarget
         fragment=lxml.etree.fromstring(str)
         ForceLinkTarget(fragment, target=target)
         return lxml.etree.tostring(fragment, encoding=unicode)
@@ -82,6 +82,26 @@ class ForceLinkTargetTests(unittest.TestCase):
 
 
 
+class StripOuterBreakTests(unittest.TestCase):
+    def _strip(self, str):
+        from htmllaundry.utils import StripOuterBreaks
+        fragment=lxml.etree.fromstring(str)
+        StripOuterBreaks(fragment)
+        return lxml.etree.tostring(fragment, encoding=unicode)
+
+    def testNoBreak(self):
+        self.assertEqual(self._strip("<body>Dummy text</body>"), "<body>Dummy text</body>")
+
+    def testTrailingBreak(self):
+        self.assertEqual(self._strip("<body>Dummy text<br/></body>"), "<body>Dummy text</body>")
+
+    def testLeadingBreak(self):
+        self.assertEqual(self._strip("<body><br/>Dummy text</body>"), "<body>Dummy text</body>")
+
+    def testBreakAfterElement(self):
+        self.assertEqual(self._strip("<body><p>Dummy</p><br/>text</body>"), "<body><p>Dummy</p>text</body>")
+
+
 class SanizeTests(unittest.TestCase):
     def testEmpty(self):
         self.assertEqual(sanitize(u""), u"")
@@ -91,6 +111,9 @@ class SanizeTests(unittest.TestCase):
 
     def testParagraphWithWhitespace(self):
         self.assertEqual(sanitize(u"<p>  </p>"), u"")
+
+    def testLeadingBreak(self):
+        self.assertEqual(sanitize(u"<br/><p>Test</p>"), u"<p>Test</p>")
 
     def testHeaderAndText(self):
         self.assertEqual(sanitize(u"<h3>Title</h3><p>Test</p>"),
