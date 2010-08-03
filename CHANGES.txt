@@ -4,7 +4,9 @@ Changelog
 1.4 - Unreleased
 ----------------
 
-* ....
+* Small code cleanup.
+
+* Strip leading breaks.
 
 
 1.3 - July 30, 2010
