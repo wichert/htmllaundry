@@ -1,8 +1,14 @@
 Changelog
 =========
 
-1.4 - Unreleased
+1.5 - Unreleased
 ----------------
+
+* ...
+
+
+1.4 - August 3, 2010
+--------------------
 
 * Small code cleanup.
 
