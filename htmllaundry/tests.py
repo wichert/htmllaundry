@@ -48,10 +48,10 @@ class RemoveEmptyTagsTests(unittest.TestCase):
         self.assertEqual(self._remove(u"<div><img src='image'/></div>"), u'<div><img src="image"/></div>')
 
     def testCollapseBreaks(self):
-        self.assertEqual(self._remove(u"<div>one<br/><br/>two</div>"), u"<div>one<br/>two</div>")
+        self.assertEqual(self._remove(u"<body><p>one<br/><br/>two</p></body>"), u"<body><p>one<br/>two</p></body>")
 
     def testNestedData(self):
-        self.assertEqual(self._remove(u"<div><h3><bad/></h3> <p>Test</p></div>"), u"<div><p>Test</p></div>")
+        self.assertEqual(self._remove(u"<div><h3><bad/></h3><p>Test</p></div>"), u"<div><p>Test</p></div>")
 
     def testKeepElementsWithTail(self):
         self.assertEqual(self._remove(u"<body>One<br/> two<br/> three</body>"),
@@ -60,6 +60,8 @@ class RemoveEmptyTagsTests(unittest.TestCase):
     def testTrailingBreak(self):
         self.assertEqual(self._remove(u"<div>Test <br/></div>"), u"<div>Test </div>")
 
+    def testLeadingBreak(self):
+        self.assertEqual(self._remove(u"<div><br/>Test</div>"), u"<div>Test</div>")
 
 
 class ForceLinkTargetTests(unittest.TestCase):

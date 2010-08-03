@@ -26,6 +26,24 @@ def ForceLinkTarget(doc, target="_blank"):
             el.set("target", target)
 
 
+def removeElement(el):
+    parent=el.getparent()
+    if el.tail:
+        previous=el.getprevious()
+        if previous is not None:
+            if previous.tail:
+                previous.tail+=el.tail
+            else:
+                previous.tail=el.tail
+        else:
+            if parent.text:
+                parent.text+=el.tail
+            else:
+                parent.text=el.tail
+
+    parent.remove(el)
+
+
 def RemoveEmptyTags(doc):
     """Removes all empty tags from a HTML document. Javascript editors
     and browsers have a nasty habit of leaving stray tags around after
@@ -45,14 +63,13 @@ def RemoveEmptyTags(doc):
     def clean(doc):
         victims=[]
         for el in doc.iter():
-            if el.tag=="br" and not el.tail:
+            if el.tag=="br":
                 preceding=el.getprevious()
-                if preceding is not None and preceding.tag==el.tag:
-                    victims.append(el)
-                    continue
+                parent=el.getparent()
 
-                next=el.getnext()
-                if next is None or next.tag==el.tag:
+                if (preceding is None and not parent.text) or \
+                        (preceding is not None and preceding.tag==el.tag and not preceding.tail) or \
+                        (not el.tail and el.getnext() is None):
                     victims.append(el)
                     continue
 
@@ -68,7 +85,7 @@ def RemoveEmptyTags(doc):
             return 0
         else:
             for victim in victims:
-                victim.getparent().remove(victim)
+                removeElement(victim)
 
         return len(victims)
 
@@ -86,24 +103,10 @@ def StripOuterBreaks(doc):
     for i in range(len(doc)):
         el=doc[i]
         if el.tag=="br":
-            if el.tail:
-                previous=el.getprevious()
-                if previous is not None:
-                    if previous.tail:
-                        previous.tail+=el.tail
-                    else:
-                        previous.tail=el.tail
-                else:
-                    parent=el.getparent()
-                    if parent.text:
-                        parent.text+=el.tail
-                    else:
-                        parent.text=el.tail
-
             victims.append(el)
 
     for victim in victims:
-        victim.getparent().remove(victim)
+        removeElement(victim)
 
 
 
