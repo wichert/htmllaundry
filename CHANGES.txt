@@ -1,8 +1,14 @@
 Changelog
 =========
 
-1.6 - Unreleased
+1.7 - Unreleased
 ----------------
+
+* ...
+
+
+1.6 - November 18, 2010
+-----------------------
 
 * Correct whitespace test for wrapping bare text as well.
 
