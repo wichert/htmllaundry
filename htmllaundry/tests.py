@@ -44,6 +44,9 @@ class RemoveEmptyTagsTests(unittest.TestCase):
     def testRemoveParagraphWithWhitespace(self):
         self.assertEqual(self._remove(u"<div><p>  </p></div>"), u"<div/>")
         
+    def testRemoveParagraphWithUnicodeWhitespace(self):
+        self.assertEqual(self._remove(u"<div><p> \xa0 </p></div>"), u"<div/>")
+        
     def testKeepEmptyImageElement(self):
         self.assertEqual(self._remove(u"<div><img src='image'/></div>"), u'<div><img src="image"/></div>')
 

@@ -4,7 +4,8 @@ Changelog
 1.5 - Unreleased
 ----------------
 
-* ...
+* Correct whitespace checks to handle all unicode whitespace. This fixes problems
+  with \xA0 (or &nbsp; in HTML-speak) being treated as text.
 
 
 1.4 - August 3, 2010

@@ -7,6 +7,12 @@ from htmllaundry.cleaners import DocumentCleaner
 TAG = re.compile(u"<.*?>")
 ANCHORS = etree.XPath("descendant-or-self::a | descendant-or-self::x:a",
                       namespaces={'x':html.XHTML_NAMESPACE})
+ALL_WHITESPACE = re.compile(r"^\s*$", re.UNICODE)
+
+
+def isWhitespace(txt):
+    """Utility method to test if txt is all whitespace or None."""
+    return txt is None or bool(ALL_WHITESPACE.match(txt))
 
 
 def StripMarkup(markup):
@@ -76,7 +82,7 @@ def RemoveEmptyTags(doc):
             if el.tag in legal_empty_tags:
                 continue
 
-            if len(el)==0 and (el.text is None or not el.text.strip()):
+            if len(el)==0 and isWhitespace(el.text):
                 victims.append(el)
                 continue
 
