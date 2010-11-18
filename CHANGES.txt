@@ -4,7 +4,7 @@ Changelog
 1.6 - Unreleased
 ----------------
 
-* ...
+* Correct whitespace test for wrapping bare text as well.
 
 
 1.5 - November 18, 2010

@@ -115,7 +115,7 @@ class SanizeTests(unittest.TestCase):
         self.assertEqual(sanitize(u"<p>Test</p>"), u"<p>Test</p>")
 
     def testParagraphWithWhitespace(self):
-        self.assertEqual(sanitize(u"<p>  </p>"), u"")
+        self.assertEqual(sanitize(u"<p>Test</p>\n<p>\xa0</p>\n"), u"<p>Test</p>\n\n")
 
     def testLeadingBreak(self):
         self.assertEqual(sanitize(u"<br/><p>Test</p>"), u"<p>Test</p>")

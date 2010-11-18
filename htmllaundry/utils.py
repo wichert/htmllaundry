@@ -131,7 +131,7 @@ def WrapText(doc):
     insertions=[]
     for i in range(len(doc)):
         el=doc[i]
-        if el.tail:
+        if not isWhitespace(el.tail):
             insertions.append((i, par(el.tail)))
             el.tail=None
 
