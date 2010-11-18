@@ -1,8 +1,14 @@
 Changelog
 =========
 
-1.5 - Unreleased
+1.6 - Unreleased
 ----------------
+
+* ...
+
+
+1.5 - November 18, 2010
+-----------------------
 
 * Correct whitespace checks to handle all unicode whitespace. This fixes problems
   with \xA0 (or &nbsp; in HTML-speak) being treated as text.
