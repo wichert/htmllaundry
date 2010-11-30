@@ -15,21 +15,11 @@ def isWhitespace(txt):
     return txt is None or bool(ALL_WHITESPACE.match(txt))
 
 
+
 def StripMarkup(markup):
     """Strip all markup from a HTML fragment."""
     return TAG.sub(u"", markup)
 
-
-
-def ForceLinkTarget(doc, target="_blank"):
-    """Force a target on links in a HTML document. If `None` is
-    given as target all target attributes are removed instead."""
-    for el in ANCHORS(doc):
-        if target is None:
-            if "target" in el.attrib:
-                del el.attrib["target"]
-        else:
-            el.set("target", target)
 
 
 def removeElement(el):
@@ -155,7 +145,6 @@ def sanitize(input, cleaner=DocumentCleaner):
     RemoveEmptyTags(cleaned)
     StripOuterBreaks(cleaned)
     WrapText(cleaned)
-    ForceLinkTarget(cleaned)
 
     output=u"".join([etree.tostring(fragment, encoding=unicode)
                      for fragment in cleaned.iterchildren()])
