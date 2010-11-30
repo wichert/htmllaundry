@@ -4,7 +4,9 @@ Changelog
 1.7 - Unreleased
 ----------------
 
-* ...
+* Make forcing of target attributes on externals linke configurable via a
+  new ``link_target`` option in the cleaners. Only enable this option for
+  the ``CommentCleaner``.
 
 
 1.6 - November 18, 2010

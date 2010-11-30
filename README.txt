@@ -34,7 +34,8 @@ includes three cleaners:
   want to accept single-line input, for example in document titles.
 
 * ``htmllaundry.cleaners.CommentCleaner`` only allows a very limited set of
-  HTML elements, and is designed to be useful for user provided comments.
+  HTML elements, and is designed to be useful for user provided comments. It
+  will also force all external links to open in a new browser window.
 
 
 If you want to go all the way you can also use ``StripMarkup`` to strip

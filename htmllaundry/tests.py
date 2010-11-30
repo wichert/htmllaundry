@@ -67,23 +67,25 @@ class RemoveEmptyTagsTests(unittest.TestCase):
         self.assertEqual(self._remove(u"<div><br/>Test</div>"), u"<div>Test</div>")
 
 
+
 class ForceLinkTargetTests(unittest.TestCase):
-    def _force(self, str, target="_blank"):
-        from htmllaundry.utils import ForceLinkTarget
+    def force_link_target(self, str, target="_blank"):
+        from htmllaundry.cleaners import LaundryCleaner
         fragment=lxml.etree.fromstring(str)
-        ForceLinkTarget(fragment, target=target)
+        cleaner=LaundryCleaner()
+        cleaner.force_link_target(fragment, target)
         return lxml.etree.tostring(fragment, encoding=unicode)
 
     def testNoAnchor(self):
-        self.assertEqual(self._force(u"<div><p/></div>"), u"<div><p/></div>")
+        self.assertEqual(self.force_link_target(u"<div><p/></div>"), u"<div><p/></div>")
 
     def testAddTarget(self):
-        self.assertEqual(self._force(u"<div><a/></div>"),
-                         u'<div><a target="_blank"/></div>')
+        self.assertEqual(self.force_link_target(u'<div><a href="http://example.com"/></div>', "_blank"),
+                u'<div><a href="http://example.com" target="_blank"/></div>')
 
     def testRemoveTarget(self):
-        self.assertEqual(self._force(u"<div><a target='_blank'/></div>", None),
-                         u"<div><a/></div>")
+        self.assertEqual(self.force_link_target(u'<div><a target="_blank" href="http://example.com"/></div>', None),
+                u'<div><a href="http://example.com"/></div>')
 
 
 

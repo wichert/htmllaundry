@@ -1,6 +1,27 @@
 from lxml.html.clean import Cleaner
+from lxml.html.clean import _find_external_links
 
-DocumentCleaner = Cleaner(
+
+marker = []
+
+class LaundryCleaner(Cleaner):
+    link_target = marker
+
+    def __call__(self, doc):
+        super(LaundryCleaner, self).__call__(doc)
+        if self.link_target is not marker:
+            self.force_link_target(doc, self.link_target)
+
+    def force_link_target(self, doc, target):
+        for el in _find_external_links(doc):
+            if target is None:
+                if "target" in el.attrib:
+                    del el.attrib["target"]
+            else:
+                el.set("target", target)
+
+
+DocumentCleaner = LaundryCleaner(
             page_structure = False,
             remove_unknown_tags = False,
             allow_tags = [ "blockquote", "a", "img", "em", "p", "strong",
@@ -22,7 +43,7 @@ DocumentCleaner = Cleaner(
 
 
 # Useful for line fields such as titles
-LineCleaner = Cleaner(
+LineCleaner = LaundryCleaner(
             page_structure = False,
             safe_attrs_only = True,
             remove_unknown_tags = False, # Weird API..
@@ -36,7 +57,7 @@ LineCleaner = Cleaner(
             frames = False,
             annoying_tags = False)
 
-CommentCleaner = Cleaner(
+CommentCleaner = LaundryCleaner(
             page_structure = False,
             safe_attrs_only = True,
             remove_unknown_tags = False, # Weird API..
@@ -48,7 +69,8 @@ CommentCleaner = Cleaner(
             style = False,
             processing_instructions = False,
             frames = False,
-            annoying_tags = False)
+            annoying_tags = False,
+            link_target = "_blank")
 
 
 __all__ = [ "DocumentCleaner", "LineCleaner", "CommentCleaner"  ]
