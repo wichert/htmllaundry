@@ -6,7 +6,7 @@ setup(name="htmllaundry",
       version=version,
       description="Simple HTML cleanup utilities",
       long_description=open("README.rst").read()+"\n\n"+
-                       open("CHANGES.txt").read(),
+                       open("CHANGES.rst").read(),
       classifiers=[
           "Intended Audience :: Developers",
           "License :: OSI Approved :: BSD License",
