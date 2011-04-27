@@ -4,6 +4,8 @@ Changelog
 1.9 - Unreleased
 ----------------
 
+* Add MANIFEST.in to faciliate releases not made from subversion.
+
 * Fix all cleaners to strip javascript. This fixes `issue 
   <https://github.com/wichert/htmllaundry/issues/1>`_.
 
