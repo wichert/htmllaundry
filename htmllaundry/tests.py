@@ -1,36 +1,41 @@
 import unittest
-import lxml.etree
-from htmllaundry.utils import StripMarkup
-from htmllaundry.utils import sanitize
 
 class Mock:
     pass
 
 
 class StripMarkupTests(unittest.TestCase):
+    def StripMarkup(self, *a, **kw):
+        from htmllaundry.utils import StripMarkup
+        return StripMarkup(*a, **kw)
+
     def testEmpty(self):
         obj=Mock()
         obj.description=u""
-        self.assertEqual(StripMarkup(u""), u"")
+        self.assertEqual(self.StripMarkup(u""), u"")
 
     def testNoMarkup(self):
-        self.assertEqual(StripMarkup(u"Test"), u"Test")
+        self.assertEqual(self.StripMarkup(u"Test"), u"Test")
 
     def testSingleTag(self):
-        self.assertEqual(StripMarkup(u"Test <em>me</me>"), u"Test me")
+        self.assertEqual(self.StripMarkup(u"Test <em>me</me>"), u"Test me")
 
     def testMultipleTags(self):
-        self.assertEqual(StripMarkup(u"Test <em>me</me> <strong>now</strong>"),
-                         u"Test me now")
+        self.assertEqual(
+                self.StripMarkup(u"Test <em>me</me> <strong>now</strong>"),
+                u"Test me now")
 
     def testStrayBracket(self):
-        self.assertEqual(StripMarkup(u"Test <em>me</em> >") , u"Test me >")
+        self.assertEqual(
+                self.StripMarkup(u"Test <em>me</em> >"),
+                u"Test me >")
 
 
 
 class RemoveEmptyTagsTests(unittest.TestCase):
     def _remove(self, str):
         from htmllaundry.utils import RemoveEmptyTags
+        import lxml.etree
         fragment=lxml.etree.fromstring(str)
         fragment=RemoveEmptyTags(fragment)
         return lxml.etree.tostring(fragment, encoding=unicode)
@@ -70,6 +75,7 @@ class RemoveEmptyTagsTests(unittest.TestCase):
 
 class ForceLinkTargetTests(unittest.TestCase):
     def force_link_target(self, str, target="_blank"):
+        import lxml.etree
         from htmllaundry.cleaners import LaundryCleaner
         fragment=lxml.etree.fromstring(str)
         cleaner=LaundryCleaner()
@@ -91,6 +97,7 @@ class ForceLinkTargetTests(unittest.TestCase):
 
 class StripOuterBreakTests(unittest.TestCase):
     def _strip(self, str):
+        import lxml.etree
         from htmllaundry.utils import StripOuterBreaks
         fragment=lxml.etree.fromstring(str)
         StripOuterBreaks(fragment)
@@ -109,31 +116,46 @@ class StripOuterBreakTests(unittest.TestCase):
         self.assertEqual(self._strip("<body><p>Dummy</p><br/>text</body>"), "<body><p>Dummy</p>text</body>")
 
 
+
 class SanizeTests(unittest.TestCase):
+    def sanitize(self, *a, **kw):
+        from htmllaundry.utils import sanitize
+        return sanitize(*a, **kw)
+
     def testEmpty(self):
-        self.assertEqual(sanitize(u""), u"")
+        self.assertEqual(self.sanitize(u""), u"")
 
     def testParagraph(self):
-        self.assertEqual(sanitize(u"<p>Test</p>"), u"<p>Test</p>")
+        self.assertEqual(self.sanitize(u"<p>Test</p>"), u"<p>Test</p>")
 
     def testParagraphWithWhitespace(self):
-        self.assertEqual(sanitize(u"<p>Test</p>\n<p>\xa0</p>\n"), u"<p>Test</p>\n\n")
+        self.assertEqual(
+                self.sanitize(u"<p>Test</p>\n<p>\xa0</p>\n"),
+                u"<p>Test</p>\n\n")
 
     def testLeadingBreak(self):
-        self.assertEqual(sanitize(u"<br/><p>Test</p>"), u"<p>Test</p>")
+        self.assertEqual(
+                self.sanitize(u"<br/><p>Test</p>"),
+                u"<p>Test</p>")
 
     def testHeaderAndText(self):
-        self.assertEqual(sanitize(u"<h3>Title</h3><p>Test</p>"),
-                         u"<h3>Title</h3><p>Test</p>")
+        self.assertEqual(
+                self.sanitize(u"<h3>Title</h3><p>Test</p>"),
+                u"<h3>Title</h3><p>Test</p>")
 
     def testUnwrappedText(self):
-        self.assertEqual(sanitize(u"Hello, World"), u"<p>Hello, World</p>")
+        self.assertEqual(
+                self.sanitize(u"Hello, World"),
+                u"<p>Hello, World</p>")
 
     def testTrailingUnwrappedText(self):
-        self.assertEqual(sanitize(u"<p>Hello,</p> World"), u"<p>Hello,</p><p> World</p>")
+        self.assertEqual(
+                self.sanitize(u"<p>Hello,</p> World"),
+                u"<p>Hello,</p><p> World</p>")
 
     def testUnwrappedTextEverywhere(self):
-        self.assertEqual(sanitize(u"Hello, <p>you</p> nice <em>person</em>."),
+        self.assertEqual(
+                self.sanitize(u"Hello, <p>you</p> nice <em>person</em>."),
                 u"<p>Hello, </p><p>you</p><p> nice </p><em>person</em><p>.</p>")
 
 
