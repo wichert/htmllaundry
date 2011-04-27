@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.9 - Unreleased
-----------------
+1.9 - April 27, 2011
+--------------------
 
 * Add MANIFEST.in to faciliate releases not made from subversion.
 
