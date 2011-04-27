@@ -158,6 +158,16 @@ class SanizeTests(unittest.TestCase):
                 self.sanitize(u"Hello, <p>you</p> nice <em>person</em>."),
                 u"<p>Hello, </p><p>you</p><p> nice </p><em>person</em><p>.</p>")
 
+    def testStripStyleAttributes(self):
+        self.assertEqual(
+                self.sanitize(u'<p style=\"text-weight: bold\">Hello</p>'),
+                u'<p>Hello</p>')
+
+    def testJavascriptLink(self):
+        self.assertEqual(
+                self.sanitize(u'<p><a href="javascript:alert(\'I am evil\')">click me</a></p>'),
+                u'<p><a href="">click me</a></p>')
+
 
 
 def test_suite():
