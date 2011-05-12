@@ -106,12 +106,12 @@ def StripOuterBreaks(doc):
 
 
 
-def WrapText(doc):
+def WrapText(doc, element='p'):
     """Make sure there is no unwrapped text at the top level. Any bare text
     found is wrapped in a `<p>` element.
     """
     def par(text):
-        el=etree.Element("p")
+        el=etree.Element(element)
         el.text=text
         return el
         
@@ -131,7 +131,7 @@ def WrapText(doc):
 
 
 
-def sanitize(input, cleaner=DocumentCleaner):
+def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
     """Cleanup markup using a given cleanup configuration."""
     if "body" not in cleaner.allow_tags:
         cleaner.allow_tags.append("body")
@@ -144,7 +144,12 @@ def sanitize(input, cleaner=DocumentCleaner):
     cleaned=cleaner.clean_html(body)
     RemoveEmptyTags(cleaned)
     StripOuterBreaks(cleaned)
-    WrapText(cleaned)
+
+    if wrap in html.defs.tags:
+        WrapText(cleaned, wrap)
+    else:
+        raise KeyError(
+            "Invalid html tag provided for wrapping the sanitized text")
 
     output=u"".join([etree.tostring(fragment, encoding=unicode)
                      for fragment in cleaned.iterchildren()])
