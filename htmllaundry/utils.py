@@ -132,7 +132,9 @@ def WrapText(doc, element='p'):
 
 
 def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
-    """Cleanup markup using a given cleanup configuration."""
+    """Cleanup markup using a given cleanup configuration.
+       Unwrapped text will be wrapped with wrap parameter. 
+    """
     if "body" not in cleaner.allow_tags:
         cleaner.allow_tags.append("body")
 
