@@ -1,6 +1,18 @@
 from setuptools import setup, find_packages
+import sys
 
 version = "1.10"
+
+if sys.version_info<(3,2):
+    extra = {
+          "z3cform": [ "z3c.form",
+                       "zope.interface",
+                       "zope.component",
+                       "zope.schema",
+                     ],
+      }
+else:
+    extra = {}
 
 setup(name="htmllaundry",
       version=version,
@@ -30,13 +42,7 @@ setup(name="htmllaundry",
       install_requires=[
           "lxml",
       ],
-      extras_require={
-          "z3cform": [ "z3c.form",
-                       "zope.interface",
-                       "zope.component",
-                       "zope.schema",
-                     ],
-      },
+      extras_require=extra,
       tests_require="nose>=0.10.0b1",
       test_suite="nose.collector",
       )
