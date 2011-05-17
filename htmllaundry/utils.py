@@ -147,14 +147,17 @@ def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
     RemoveEmptyTags(cleaned)
     StripOuterBreaks(cleaned)
 
-    if wrap in html.defs.tags:
-        WrapText(cleaned, wrap)
-    else:
-        raise ValueError(
-            "Invalid html tag provided for wrapping the sanitized text")
+    if wrap is not None:
+        if wrap in html.defs.tags:
+            WrapText(cleaned, wrap)
+        else:
+            raise ValueError(
+                "Invalid html tag provided for wrapping the sanitized text")
 
     output=u"".join([etree.tostring(fragment, encoding=unicode)
                      for fragment in cleaned.iterchildren()])
+    if wrap is None and cleaned.text:
+        output=cleaned.text+output
 
     return output
 

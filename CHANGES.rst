@@ -4,7 +4,8 @@ Changelog
 1.10 - Unreleased
 -----------------
 
-* Add option to `sanitize` to specify a different wrap element.
+* Add option to `sanitize` to specify a different wrap element or
+  skip wrapping completely.
 
 
 1.9 - April 27, 2011

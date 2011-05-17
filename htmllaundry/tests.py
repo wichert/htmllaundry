@@ -185,10 +185,14 @@ class SanizeTests(unittest.TestCase):
                 self.sanitize(u'<p><a href="javascript:alert(\'I am evil\')">click me</a></p>'),
                 u'<p><a href="">click me</a></p>')
 
-    def testWrappingExceptions(self):
+    def testSkipWrapping(self):
+        self.assertEqual(
+                self.sanitize(u"Hello, <em>you</em> nice <em>person</em>.", wrap=None),
+                u"Hello, <em>you</em> nice <em>person</em>.")
+
+    def testRejectBadWrapElement(self):
         self.assertRaises(ValueError, self.sanitize, u"<p>Hello,</p> World", wrap="xxx")
-        self.assertRaises(ValueError, self.sanitize, u"Hello, <p>you</p> nice <em>person</em>.", wrap="")
-        self.assertRaises(ValueError, self.sanitize, u"Hello, <p>you</p> nice <em>person</em>.", wrap=None)
+        self.assertRaises(ValueError, self.sanitize, u"Hello, <em>you</em> nice <em>person</em>.", wrap="")
 
 
 def test_suite():
