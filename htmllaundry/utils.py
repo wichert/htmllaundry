@@ -155,7 +155,7 @@ def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
             raise ValueError(
                 "Invalid html tag provided for wrapping the sanitized text")
 
-    output=six.u("").join([etree.tostring(fragment, encoding=unicode)
+    output=six.u("").join([etree.tostring(fragment, encoding=six.text_type)
                      for fragment in cleaned.iterchildren()])
     if wrap is None and cleaned.text:
         output=cleaned.text+output
