@@ -83,4 +83,4 @@ widget.
 
 
 .. _z3c.form: http://pypi.python.org/pypi/z3c.form
-.. _lxml: http://codespeak.net/lxml/
+.. _lxml: http://lxml.de/
