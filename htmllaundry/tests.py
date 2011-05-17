@@ -3,7 +3,6 @@ import unittest
 class Mock:
     pass
 
-
 class StripMarkupTests(unittest.TestCase):
     def StripMarkup(self, *a, **kw):
         from htmllaundry.utils import StripMarkup
@@ -127,6 +126,7 @@ class SanizeTests(unittest.TestCase):
 
     def testParagraph(self):
         self.assertEqual(self.sanitize(u"<p>Test</p>"), u"<p>Test</p>")
+        self.assertEqual(self.sanitize(u"<p>Test</p>", wrap="span"), u"<p>Test</p>")
 
     def testParagraphWithWhitespace(self):
         self.assertEqual(
@@ -148,15 +148,27 @@ class SanizeTests(unittest.TestCase):
                 self.sanitize(u"Hello, World"),
                 u"<p>Hello, World</p>")
 
+        self.assertEqual(
+                self.sanitize(u"Hello, World", wrap="strong"),
+                u"<strong>Hello, World</strong>")
+
     def testTrailingUnwrappedText(self):
         self.assertEqual(
                 self.sanitize(u"<p>Hello,</p> World"),
                 u"<p>Hello,</p><p> World</p>")
 
+        self.assertEqual(
+                self.sanitize(u"<p>Hello,</p> World", wrap="b"),
+                u"<p>Hello,</p><b> World</b>")
+
     def testUnwrappedTextEverywhere(self):
         self.assertEqual(
                 self.sanitize(u"Hello, <p>you</p> nice <em>person</em>."),
                 u"<p>Hello, </p><p>you</p><p> nice </p><em>person</em><p>.</p>")
+
+        self.assertEqual(
+                self.sanitize(u"Hello, <p>you</p> nice <em>person</em>.", wrap="div"),
+                u"<div>Hello, </div><p>you</p><div> nice </div><em>person</em><div>.</div>")
 
     def testStripStyleAttributes(self):
         self.assertEqual(
@@ -167,6 +179,35 @@ class SanizeTests(unittest.TestCase):
         self.assertEqual(
                 self.sanitize(u'<p><a href="javascript:alert(\'I am evil\')">click me</a></p>'),
                 u'<p><a href="">click me</a></p>')
+
+    def testWrappingExceptions(self):
+        self.assertRaises(
+                KeyError,
+                self.sanitize,
+                *[u"<p>Hello,</p> World"], 
+                **{'wrap':"xxx"}
+                )
+    
+        self.assertRaises(
+                KeyError,
+                self.sanitize,
+                *[u"Hello, you nice <em>person</em>."], 
+                **{'wrap':"<span>"}
+                )
+
+        self.assertRaises(
+                KeyError,
+                self.sanitize,
+                *[u"Hello, <p>you</p> nice <em>person</em>."], 
+                **{'wrap':""}
+                )
+
+        self.assertRaises(
+                KeyError,
+                self.sanitize,
+                *[u"Hello, <p>you</p> nice <em>person</em>."], 
+                **{'wrap':None}
+                )
 
 
 
