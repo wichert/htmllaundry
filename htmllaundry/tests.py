@@ -6,41 +6,41 @@ class Mock:
     pass
 
 
-class StripMarkupTests(unittest.TestCase):
-    def StripMarkup(self, *a, **kw):
-        from htmllaundry.utils import StripMarkup
-        return StripMarkup(*a, **kw)
+class strip_markup_tests(unittest.TestCase):
+    def strip_markup(self, *a, **kw):
+        from htmllaundry.utils import strip_markup
+        return strip_markup(*a, **kw)
 
     def testEmpty(self):
         obj = Mock()
         obj.description = six.u('')
-        self.assertEqual(self.StripMarkup(six.u('')), six.u(''))
+        self.assertEqual(self.strip_markup(six.u('')), six.u(''))
 
     def testNoMarkup(self):
-        self.assertEqual(self.StripMarkup(six.u('Test')), six.u('Test'))
+        self.assertEqual(self.strip_markup(six.u('Test')), six.u('Test'))
 
     def testSingleTag(self):
         self.assertEqual(
-                self.StripMarkup(six.u('Test <em>me</me>')),
+                self.strip_markup(six.u('Test <em>me</me>')),
                 six.u('Test me'))
 
     def testMultipleTags(self):
         self.assertEqual(
-            self.StripMarkup(six.u('Test <em>me</me> <strong>now</strong>')),
+            self.strip_markup(six.u('Test <em>me</me> <strong>now</strong>')),
             six.u('Test me now'))
 
     def testStrayBracket(self):
         self.assertEqual(
-                self.StripMarkup(six.u('Test <em>me</em> >')),
+                self.strip_markup(six.u('Test <em>me</em> >')),
                 six.u('Test me >'))
 
 
-class RemoveEmptyTagsTests(unittest.TestCase):
+class remove_empty_tags_tests(unittest.TestCase):
     def _remove(self, str):
-        from htmllaundry.utils import RemoveEmptyTags
+        from htmllaundry.utils import remove_empty_tags
         import lxml.etree
         fragment = lxml.etree.fromstring(str)
-        fragment = RemoveEmptyTags(fragment)
+        fragment = remove_empty_tags(fragment)
         return lxml.etree.tostring(fragment, encoding=six.text_type)
 
     def testRemoveEmptyParagraphElement(self):
@@ -122,12 +122,12 @@ class ForceLinkTargetTests(unittest.TestCase):
             six.u('<div><a href="http://example.com"/></div>'))
 
 
-class StripOuterBreakTests(unittest.TestCase):
+class strip_outer_breaks_tests(unittest.TestCase):
     def _strip(self, str):
         import lxml.etree
-        from htmllaundry.utils import StripOuterBreaks
+        from htmllaundry.utils import strip_outer_breaks
         fragment = lxml.etree.fromstring(str)
-        StripOuterBreaks(fragment)
+        strip_outer_breaks(fragment)
         return lxml.etree.tostring(fragment, encoding=six.text_type)
 
     def testNoBreak(self):

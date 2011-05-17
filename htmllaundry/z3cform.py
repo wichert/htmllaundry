@@ -18,7 +18,6 @@ class HtmlText(Text):
     implements(IHtmlText)
 
 
-
 class HtmlDataConverter(FieldDataConverter):
     """z3c.form data convertor for HTML forms. This convertor
     sanitizes all input, guaranteeing simple and valid markup
@@ -27,9 +26,7 @@ class HtmlDataConverter(FieldDataConverter):
     adapts(IHtmlText, IWidget)
 
     def toFieldValue(self, value):
-        data=super(HtmlDataConverter, self).toFieldValue(value)
+        data = super(HtmlDataConverter, self).toFieldValue(value)
         if data:
-            data=sanitize(data)
+            data = sanitize(data)
         return data
-
-

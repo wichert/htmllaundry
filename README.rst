@@ -38,11 +38,11 @@ includes three cleaners:
   will also force all external links to open in a new browser window.
 
 
-If you want to go all the way you can also use ``StripMarkup`` to strip
+If you want to go all the way you can also use ``strip_markup`` to strip
 all markup from your input::
 
-  >>> from htmllaundry import StripMarkup
-  >>> StripMarkup('Hello, <em>world</em>')
+  >>> from htmllaundry import strip_markup
+  >>> strip_markup('Hello, <em>world</em>')
   'Hello, world'
 
 

@@ -11,17 +11,20 @@ ANCHORS = etree.XPath('descendant-or-self::a | descendant-or-self::x:a',
 ALL_WHITESPACE = re.compile(r'^\s*$', re.UNICODE)
 
 
-def isWhitespace(txt):
+def is_whitespace(txt):
     """Utility method to test if txt is all whitespace or None."""
     return txt is None or bool(ALL_WHITESPACE.match(txt))
 
 
-def StripMarkup(markup):
+def strip_markup(markup):
     """Strip all markup from a HTML fragment."""
     return TAG.sub(six.u(""), markup)
 
 
-def removeElement(el):
+StripMarkup = strip_markup  # BBB for htmllaundry <2.0
+
+
+def remove_element(el):
     parent = el.getparent()
     if el.tail:
         previous = el.getprevious()
@@ -39,7 +42,7 @@ def removeElement(el):
     parent.remove(el)
 
 
-def RemoveEmptyTags(doc):
+def remove_empty_tags(doc):
     """Removes all empty tags from a HTML document. Javascript editors
     and browsers have a nasty habit of leaving stray tags around after
     their contents have been removed. This function removes all such
@@ -72,7 +75,7 @@ def RemoveEmptyTags(doc):
             if el.tag in legal_empty_tags:
                 continue
 
-            if len(el) == 0 and isWhitespace(el.text):
+            if len(el) == 0 and is_whitespace(el.text):
                 victims.append(el)
                 continue
 
@@ -81,7 +84,7 @@ def RemoveEmptyTags(doc):
             return 0
         else:
             for victim in victims:
-                removeElement(victim)
+                remove_element(victim)
 
         return len(victims)
 
@@ -91,7 +94,7 @@ def RemoveEmptyTags(doc):
     return doc
 
 
-def StripOuterBreaks(doc):
+def strip_outer_breaks(doc):
     """Remove any toplevel break elements."""
     victims = []
 
@@ -101,10 +104,10 @@ def StripOuterBreaks(doc):
             victims.append(el)
 
     for victim in victims:
-        removeElement(victim)
+        remove_element(victim)
 
 
-def WrapText(doc, element='p'):
+def wrap_text(doc, element='p'):
     """Make sure there is no unwrapped text at the top level. Any bare text
     found is wrapped in a `<p>` element.
     """
@@ -119,7 +122,7 @@ def WrapText(doc, element='p'):
     insertions = []
     for i in range(len(doc)):
         el = doc[i]
-        if not isWhitespace(el.tail):
+        if not is_whitespace(el.tail):
             insertions.append((i, par(el.tail)))
             el.tail = None
 
@@ -140,12 +143,12 @@ def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
     body = bodies[0]
 
     cleaned = cleaner.clean_html(body)
-    RemoveEmptyTags(cleaned)
-    StripOuterBreaks(cleaned)
+    remove_empty_tags(cleaned)
+    strip_outer_breaks(cleaned)
 
     if wrap is not None:
         if wrap in html.defs.tags:
-            WrapText(cleaned, wrap)
+            wrap_text(cleaned, wrap)
         else:
             raise ValueError(
                 'Invalid html tag provided for wrapping the sanitized text')

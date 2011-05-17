@@ -4,7 +4,10 @@ Changelog
 2.0 - Unreleased
 ----------------
 
-* Support Python 3 as well.
+* Use PEP8 naming for all functions. The old names for public methods
+  will continue to work for backwards compatibility.
+
+* Add support for Python 3.
 
 
 1.10 - May 17, 2011
