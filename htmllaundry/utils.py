@@ -150,7 +150,7 @@ def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
     if wrap in html.defs.tags:
         WrapText(cleaned, wrap)
     else:
-        raise KeyError(
+        raise ValueError(
             "Invalid html tag provided for wrapping the sanitized text")
 
     output=u"".join([etree.tostring(fragment, encoding=unicode)

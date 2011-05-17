@@ -126,6 +126,8 @@ class SanizeTests(unittest.TestCase):
 
     def testParagraph(self):
         self.assertEqual(self.sanitize(u"<p>Test</p>"), u"<p>Test</p>")
+
+    def testParagraphCustomWrapperNotUsedIfAlreadyWrapped(self):
         self.assertEqual(self.sanitize(u"<p>Test</p>", wrap="span"), u"<p>Test</p>")
 
     def testParagraphWithWhitespace(self):
@@ -148,6 +150,7 @@ class SanizeTests(unittest.TestCase):
                 self.sanitize(u"Hello, World"),
                 u"<p>Hello, World</p>")
 
+    def testUnwrappedTextWithCustomWrapper(self):
         self.assertEqual(
                 self.sanitize(u"Hello, World", wrap="strong"),
                 u"<strong>Hello, World</strong>")
@@ -157,6 +160,7 @@ class SanizeTests(unittest.TestCase):
                 self.sanitize(u"<p>Hello,</p> World"),
                 u"<p>Hello,</p><p> World</p>")
 
+    def testTrailingUnwrappedTextWithCustomWrapper(self):
         self.assertEqual(
                 self.sanitize(u"<p>Hello,</p> World", wrap="b"),
                 u"<p>Hello,</p><b> World</b>")
@@ -166,6 +170,7 @@ class SanizeTests(unittest.TestCase):
                 self.sanitize(u"Hello, <p>you</p> nice <em>person</em>."),
                 u"<p>Hello, </p><p>you</p><p> nice </p><em>person</em><p>.</p>")
 
+    def testUnwrappedTextEverywhereWithCustomWrapper(self):
         self.assertEqual(
                 self.sanitize(u"Hello, <p>you</p> nice <em>person</em>.", wrap="div"),
                 u"<div>Hello, </div><p>you</p><div> nice </div><em>person</em><div>.</div>")
@@ -181,34 +186,9 @@ class SanizeTests(unittest.TestCase):
                 u'<p><a href="">click me</a></p>')
 
     def testWrappingExceptions(self):
-        self.assertRaises(
-                KeyError,
-                self.sanitize,
-                *[u"<p>Hello,</p> World"], 
-                **{'wrap':"xxx"}
-                )
-    
-        self.assertRaises(
-                KeyError,
-                self.sanitize,
-                *[u"Hello, you nice <em>person</em>."], 
-                **{'wrap':"<span>"}
-                )
-
-        self.assertRaises(
-                KeyError,
-                self.sanitize,
-                *[u"Hello, <p>you</p> nice <em>person</em>."], 
-                **{'wrap':""}
-                )
-
-        self.assertRaises(
-                KeyError,
-                self.sanitize,
-                *[u"Hello, <p>you</p> nice <em>person</em>."], 
-                **{'wrap':None}
-                )
-
+        self.assertRaises(ValueError, self.sanitize, u"<p>Hello,</p> World", wrap="xxx")
+        self.assertRaises(ValueError, self.sanitize, u"Hello, <p>you</p> nice <em>person</em>.", wrap="")
+        self.assertRaises(ValueError, self.sanitize, u"Hello, <p>you</p> nice <em>person</em>.", wrap=None)
 
 
 def test_suite():
