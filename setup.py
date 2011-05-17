@@ -41,6 +41,7 @@ setup(name="htmllaundry",
       zip_safe=False,
       install_requires=[
           "lxml",
+          "six",
       ],
       extras_require=extra,
       tests_require="nose>=0.10.0b1",

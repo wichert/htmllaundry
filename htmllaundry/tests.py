@@ -1,4 +1,5 @@
 import unittest
+import six
 
 class Mock:
     pass
@@ -10,24 +11,24 @@ class StripMarkupTests(unittest.TestCase):
 
     def testEmpty(self):
         obj=Mock()
-        obj.description=u""
-        self.assertEqual(self.StripMarkup(u""), u"")
+        obj.description=six.u("")
+        self.assertEqual(self.StripMarkup(six.u("")), six.u(""))
 
     def testNoMarkup(self):
-        self.assertEqual(self.StripMarkup(u"Test"), u"Test")
+        self.assertEqual(self.StripMarkup(six.u("Test")), six.u("Test"))
 
     def testSingleTag(self):
-        self.assertEqual(self.StripMarkup(u"Test <em>me</me>"), u"Test me")
+        self.assertEqual(self.StripMarkup(six.u("Test <em>me</me>")), six.u("Test me"))
 
     def testMultipleTags(self):
         self.assertEqual(
-                self.StripMarkup(u"Test <em>me</me> <strong>now</strong>"),
-                u"Test me now")
+                self.StripMarkup(six.u("Test <em>me</me> <strong>now</strong>")),
+                six.u("Test me now"))
 
     def testStrayBracket(self):
         self.assertEqual(
-                self.StripMarkup(u"Test <em>me</em> >"),
-                u"Test me >")
+                self.StripMarkup(six.u("Test <em>me</em> >")),
+                six.u("Test me >"))
 
 
 
@@ -40,35 +41,36 @@ class RemoveEmptyTagsTests(unittest.TestCase):
         return lxml.etree.tostring(fragment, encoding=unicode)
 
     def testRemoveEmptyParagraphElement(self):
-        self.assertEqual(self._remove(u"<div><p/></div>"), u"<div/>")
+        self.assertEqual(self._remove(six.u("<div><p/></div>")), six.u("<div/>"))
 
     def testRemoveEmptyParagraph(self):
-        self.assertEqual(self._remove(u"<div><p></p></div>"), u"<div/>")
+        self.assertEqual(self._remove(six.u("<div><p></p></div>")), six.u("<div/>"))
 
     def testRemoveParagraphWithWhitespace(self):
-        self.assertEqual(self._remove(u"<div><p>  </p></div>"), u"<div/>")
+        self.assertEqual(self._remove(six.u("<div><p>  </p></div>")), six.u("<div/>"))
         
     def testRemoveParagraphWithUnicodeWhitespace(self):
-        self.assertEqual(self._remove(u"<div><p> \xa0 </p></div>"), u"<div/>")
+        self.assertEqual(self._remove(six.u("<div><p> \xa0 </p></div>")), six.u("<div/>"))
         
     def testKeepEmptyImageElement(self):
-        self.assertEqual(self._remove(u"<div><img src='image'/></div>"), u'<div><img src="image"/></div>')
+        self.assertEqual(self._remove(six.u("<div><img src='image'/></div>")),
+                six.u('<div><img src="image"/></div>'))
 
     def testCollapseBreaks(self):
-        self.assertEqual(self._remove(u"<body><p>one<br/><br/>two</p></body>"), u"<body><p>one<br/>two</p></body>")
+        self.assertEqual(self._remove(six.u("<body><p>one<br/><br/>two</p></body>")), six.u("<body><p>one<br/>two</p></body>"))
 
     def testNestedData(self):
-        self.assertEqual(self._remove(u"<div><h3><bad/></h3><p>Test</p></div>"), u"<div><p>Test</p></div>")
+        self.assertEqual(self._remove(six.u("<div><h3><bad/></h3><p>Test</p></div>")), six.u("<div><p>Test</p></div>"))
 
     def testKeepElementsWithTail(self):
-        self.assertEqual(self._remove(u"<body>One<br/> two<br/> three</body>"),
-                                      u"<body>One<br/> two<br/> three</body>")
+        self.assertEqual(self._remove(six.u("<body>One<br/> two<br/> three</body>")),
+                                      six.u("<body>One<br/> two<br/> three</body>"))
 
     def testTrailingBreak(self):
-        self.assertEqual(self._remove(u"<div>Test <br/></div>"), u"<div>Test </div>")
+        self.assertEqual(self._remove(six.u("<div>Test <br/></div>")), six.u("<div>Test </div>"))
 
     def testLeadingBreak(self):
-        self.assertEqual(self._remove(u"<div><br/>Test</div>"), u"<div>Test</div>")
+        self.assertEqual(self._remove(six.u("<div><br/>Test</div>")), six.u("<div>Test</div>"))
 
 
 
@@ -82,15 +84,16 @@ class ForceLinkTargetTests(unittest.TestCase):
         return lxml.etree.tostring(fragment, encoding=unicode)
 
     def testNoAnchor(self):
-        self.assertEqual(self.force_link_target(u"<div><p/></div>"), u"<div><p/></div>")
+        self.assertEqual(self.force_link_target(six.u("<div><p/></div>")), six.u("<div><p/></div>"))
 
     def testAddTarget(self):
-        self.assertEqual(self.force_link_target(u'<div><a href="http://example.com"/></div>', "_blank"),
-                u'<div><a href="http://example.com" target="_blank"/></div>')
+        self.assertEqual(self.force_link_target(six.u('<div><a href="http://example.com"/></div>'), "_blank"),
+                six.u('<div><a href="http://example.com" target="_blank"/></div>'))
 
     def testRemoveTarget(self):
-        self.assertEqual(self.force_link_target(u'<div><a target="_blank" href="http://example.com"/></div>', None),
-                u'<div><a href="http://example.com"/></div>')
+        self.assertEqual(
+                self.force_link_target(six.u('<div><a target="_blank" href="http://example.com"/></div>'), None),
+                six.u('<div><a href="http://example.com"/></div>'))
 
 
 
@@ -122,77 +125,77 @@ class SanizeTests(unittest.TestCase):
         return sanitize(*a, **kw)
 
     def testEmpty(self):
-        self.assertEqual(self.sanitize(u""), u"")
+        self.assertEqual(self.sanitize(six.u("")), six.u(""))
 
     def testParagraph(self):
-        self.assertEqual(self.sanitize(u"<p>Test</p>"), u"<p>Test</p>")
+        self.assertEqual(self.sanitize(six.u("<p>Test</p>")), six.u("<p>Test</p>"))
 
     def testParagraphCustomWrapperNotUsedIfAlreadyWrapped(self):
-        self.assertEqual(self.sanitize(u"<p>Test</p>", wrap="span"), u"<p>Test</p>")
+        self.assertEqual(self.sanitize(six.u("<p>Test</p>"), wrap="span"), six.u("<p>Test</p>"))
 
     def testParagraphWithWhitespace(self):
         self.assertEqual(
-                self.sanitize(u"<p>Test</p>\n<p>\xa0</p>\n"),
-                u"<p>Test</p>\n\n")
+                self.sanitize(six.u("<p>Test</p>\n<p>\xa0</p>\n")),
+                six.u("<p>Test</p>\n\n"))
 
     def testLeadingBreak(self):
         self.assertEqual(
-                self.sanitize(u"<br/><p>Test</p>"),
-                u"<p>Test</p>")
+                self.sanitize(six.u("<br/><p>Test</p>")),
+                six.u("<p>Test</p>"))
 
     def testHeaderAndText(self):
         self.assertEqual(
-                self.sanitize(u"<h3>Title</h3><p>Test</p>"),
-                u"<h3>Title</h3><p>Test</p>")
+                self.sanitize(six.u("<h3>Title</h3><p>Test</p>")),
+                six.u("<h3>Title</h3><p>Test</p>"))
 
     def testUnwrappedText(self):
         self.assertEqual(
-                self.sanitize(u"Hello, World"),
-                u"<p>Hello, World</p>")
+                self.sanitize(six.u("Hello, World")),
+                six.u("<p>Hello, World</p>"))
 
     def testUnwrappedTextWithCustomWrapper(self):
         self.assertEqual(
-                self.sanitize(u"Hello, World", wrap="strong"),
-                u"<strong>Hello, World</strong>")
+                self.sanitize(six.u("Hello, World"), wrap="strong"),
+                six.u("<strong>Hello, World</strong>"))
 
     def testTrailingUnwrappedText(self):
         self.assertEqual(
-                self.sanitize(u"<p>Hello,</p> World"),
-                u"<p>Hello,</p><p> World</p>")
+                self.sanitize(six.u("<p>Hello,</p> World")),
+                six.u("<p>Hello,</p><p> World</p>"))
 
     def testTrailingUnwrappedTextWithCustomWrapper(self):
         self.assertEqual(
-                self.sanitize(u"<p>Hello,</p> World", wrap="b"),
-                u"<p>Hello,</p><b> World</b>")
+                self.sanitize(six.u("<p>Hello,</p> World"), wrap="b"),
+                six.u("<p>Hello,</p><b> World</b>"))
 
     def testUnwrappedTextEverywhere(self):
         self.assertEqual(
-                self.sanitize(u"Hello, <p>you</p> nice <em>person</em>."),
-                u"<p>Hello, </p><p>you</p><p> nice </p><em>person</em><p>.</p>")
+                self.sanitize(six.u("Hello, <p>you</p> nice <em>person</em>.")),
+                six.u("<p>Hello, </p><p>you</p><p> nice </p><em>person</em><p>.</p>"))
 
     def testUnwrappedTextEverywhereWithCustomWrapper(self):
         self.assertEqual(
-                self.sanitize(u"Hello, <p>you</p> nice <em>person</em>.", wrap="div"),
-                u"<div>Hello, </div><p>you</p><div> nice </div><em>person</em><div>.</div>")
+                self.sanitize(six.u("Hello, <p>you</p> nice <em>person</em>."), wrap="div"),
+                six.u("<div>Hello, </div><p>you</p><div> nice </div><em>person</em><div>.</div>"))
 
     def testStripStyleAttributes(self):
         self.assertEqual(
-                self.sanitize(u'<p style=\"text-weight: bold\">Hello</p>'),
-                u'<p>Hello</p>')
+                self.sanitize(six.u('<p style=\"text-weight: bold\">Hello</p>')),
+                six.u('<p>Hello</p>'))
 
     def testJavascriptLink(self):
         self.assertEqual(
-                self.sanitize(u'<p><a href="javascript:alert(\'I am evil\')">click me</a></p>'),
-                u'<p><a href="">click me</a></p>')
+                self.sanitize(six.u('<p><a href="javascript:alert(\'I am evil\')">click me</a></p>')),
+                six.u('<p><a href="">click me</a></p>'))
 
     def testSkipWrapping(self):
         self.assertEqual(
-                self.sanitize(u"Hello, <em>you</em> nice <em>person</em>.", wrap=None),
-                u"Hello, <em>you</em> nice <em>person</em>.")
+                self.sanitize(six.u("Hello, <em>you</em> nice <em>person</em>."), wrap=None),
+                six.u("Hello, <em>you</em> nice <em>person</em>."))
 
     def testRejectBadWrapElement(self):
-        self.assertRaises(ValueError, self.sanitize, u"<p>Hello,</p> World", wrap="xxx")
-        self.assertRaises(ValueError, self.sanitize, u"Hello, <em>you</em> nice <em>person</em>.", wrap="")
+        self.assertRaises(ValueError, self.sanitize, six.u("<p>Hello,</p> World"), wrap="xxx")
+        self.assertRaises(ValueError, self.sanitize, six.u("Hello, <em>you</em> nice <em>person</em>."), wrap="")
 
 
 def test_suite():

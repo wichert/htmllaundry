@@ -1,10 +1,11 @@
 import re
+import six
 from lxml import etree
 from lxml import html
 from htmllaundry.cleaners import DocumentCleaner
 
 
-TAG = re.compile(u"<.*?>")
+TAG = re.compile(six.u("<.*?>"))
 ANCHORS = etree.XPath("descendant-or-self::a | descendant-or-self::x:a",
                       namespaces={'x':html.XHTML_NAMESPACE})
 ALL_WHITESPACE = re.compile(r"^\s*$", re.UNICODE)
@@ -18,7 +19,7 @@ def isWhitespace(txt):
 
 def StripMarkup(markup):
     """Strip all markup from a HTML fragment."""
-    return TAG.sub(u"", markup)
+    return TAG.sub(six.u(""), markup)
 
 
 
@@ -138,7 +139,7 @@ def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
     if "body" not in cleaner.allow_tags:
         cleaner.allow_tags.append("body")
 
-    input=u"<html><body>%s</body></html>" % input
+    input=six.u("<html><body>%s</body></html>") % input
     document=html.document_fromstring(input)
     bodies=[e for e in document if html._nons(e.tag)=="body"]
     body=bodies[0]
@@ -154,7 +155,7 @@ def sanitize(input, cleaner=DocumentCleaner, wrap='p'):
             raise ValueError(
                 "Invalid html tag provided for wrapping the sanitized text")
 
-    output=u"".join([etree.tostring(fragment, encoding=unicode)
+    output=six.u("").join([etree.tostring(fragment, encoding=unicode)
                      for fragment in cleaned.iterchildren()])
     if wrap is None and cleaned.text:
         output=cleaned.text+output
