@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.0 - Unreleased
+----------------
+
+* Support Python 3 as well.
+
+
 1.10 - May 17, 2011
 -------------------
 
