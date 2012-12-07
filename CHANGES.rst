@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.0 - Unreleased
-----------------
+2.0 - December 2012, 2012
+-------------------------
 
 * When wrapping unwrapped text do not create separate wrappers for inline
   elements.
