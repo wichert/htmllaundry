@@ -66,7 +66,7 @@ def remove_empty_tags(doc):
                 parent = el.getparent()
 
                 if (preceding is None and not parent.text) or \
-                        (preceding is not None and preceding.tag == el.tag \
+                        (preceding is not None and preceding.tag == el.tag
                             and not preceding.tail) or \
                         (not el.tail and el.getnext() is None):
                     victims.append(el)
