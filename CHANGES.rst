@@ -4,6 +4,9 @@ Changelog
 2.0 - Unreleased
 ----------------
 
+* When wrapping unwrapped text do not create separate wrappers for inline
+  elements.
+
 * Use PEP8 naming for all functions. The old names for public methods
   will continue to work for backwards compatibility.
 

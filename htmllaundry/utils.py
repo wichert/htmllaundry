@@ -2,9 +2,11 @@ import re
 import six
 from lxml import etree
 from lxml import html
+from lxml.html import defs
 from htmllaundry.cleaners import DocumentCleaner
 
 
+INLINE_TAGS = defs.special_inline_tags | defs.phrase_tags | defs.font_style_tags
 TAG = re.compile(six.u('<.*?>'))
 ANCHORS = etree.XPath('descendant-or-self::a | descendant-or-self::x:a',
                       namespaces={'x': html.XHTML_NAMESPACE})
@@ -107,27 +109,37 @@ def strip_outer_breaks(doc):
         remove_element(victim)
 
 
+MARKER = 'LAUNDRY-INSERT'
+
+
 def wrap_text(doc, element='p'):
     """Make sure there is no unwrapped text at the top level. Any bare text
     found is wrapped in a `<p>` element.
     """
     def par(text):
-        el = etree.Element(element)
+        el = etree.Element(element, {MARKER: ''})
         el.text = text
         return el
 
     if doc.text:
         doc.insert(0, par(doc.text))
+        doc.text = None
 
-    insertions = []
-    for i in range(len(doc)):
-        el = doc[i]
-        if not is_whitespace(el.tail):
-            insertions.append((i, par(el.tail)))
-            el.tail = None
+    while True:
+        for (i, el) in enumerate(doc):
+            if html._nons(el.tag) in INLINE_TAGS and i and MARKER in doc[i - 1].attrib:
+                doc[i - 1].append(el)
+                break
+            if not is_whitespace(el.tail):
+                doc.insert(i + 1, par(el.tail))
+                el.tail = None
+                break
+        else:
+            break
 
-    for (index, el) in reversed(insertions):
-        doc.insert(index + 1, el)
+    for el in doc:
+        if MARKER in el.attrib:
+            del el.attrib[MARKER]
 
 
 def sanitize(input, cleaner=DocumentCleaner, wrap='p'):

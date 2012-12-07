@@ -164,6 +164,11 @@ class SanizeTests(unittest.TestCase):
                 self.sanitize(six.u('<p>Test</p>')),
                 six.u('<p>Test</p>'))
 
+    def test_link_in_unwrapped_text(self):
+        self.assertEqual(
+                self.sanitize(six.u('There is a <a href="#">link</a> in here.')),
+                six.u('<p>There is a <a href="#">link</a> in here.</p>'))
+
     def testParagraphCustomWrapperNotUsedIfAlreadyWrapped(self):
         self.assertEqual(
                 self.sanitize(six.u('<p>Test</p>'), wrap='span'),
@@ -206,17 +211,17 @@ class SanizeTests(unittest.TestCase):
 
     def testUnwrappedTextEverywhere(self):
         self.assertEqual(
-            self.sanitize(six.u('Hello, <p>you</p> nice <em>person</em>.')),
-            six.u('<p>Hello, </p><p>you</p><p> nice </p>') +
-                six.u('<em>person</em><p>.</p>'))
+            self.sanitize(six.u('Hello, <p>you</p> nice and <strong>decent</strong> <em>person</em>.')),
+            six.u('<p>Hello, </p><p>you</p><p> nice and <strong>decent</strong> ') +
+                six.u('<em>person</em>.</p>'))
 
     def testUnwrappedTextEverywhereWithCustomWrapper(self):
         self.assertEqual(
                 self.sanitize(
                     six.u('Hello, <p>you</p> nice <em>person</em>.'),
                     wrap='div'),
-                six.u('<div>Hello, </div><p>you</p><div> nice </div>') +
-                    six.u('<em>person</em><div>.</div>'))
+                six.u('<div>Hello, </div><p>you</p><div> nice ') +
+                    six.u('<em>person</em>.</div>'))
 
     def testStripStyleAttributes(self):
         self.assertEqual(
