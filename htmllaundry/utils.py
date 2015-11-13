@@ -77,6 +77,10 @@ def remove_empty_tags(doc):
             if el.tag in legal_empty_tags:
                 continue
 
+            # Empty <a> can be used as anchor.
+            if (el.tag == 'a') and (('name' in el.attrib) or ('id' in el.attrib)):
+                continue
+
             if len(el) == 0 and is_whitespace(el.text):
                 victims.append(el)
                 continue

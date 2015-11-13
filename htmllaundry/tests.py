@@ -93,6 +93,17 @@ class remove_empty_tags_tests(unittest.TestCase):
                 self._remove(six.u('<div><br/>Test</div>')),
                 six.u('<div>Test</div>'))
 
+    def testDoNotRemoveEmptyAnchorElement(self):
+        self.assertEqual(
+                self._remove(six.u('<p><a id="anchor"></a></p>')),
+                six.u('<p><a id="anchor"/></p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a name="anchor" /></p>')),
+                six.u('<p><a name="anchor"/></p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a href="blah"/>Content</p>')),
+                six.u('<p>Content</p>'))
+
 
 class ForceLinkTargetTests(unittest.TestCase):
     def force_link_target(self, str, target='_blank'):
