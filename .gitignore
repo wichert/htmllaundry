@@ -1,6 +1,7 @@
 *.pyc
 *.pyo
 *.egg
+/.eggs
 /htmllaundry.egg-info
 /build
 /dist
