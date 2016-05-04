@@ -36,11 +36,11 @@ class strip_markup_tests(unittest.TestCase):
 
 
 class remove_empty_tags_tests(unittest.TestCase):
-    def _remove(self, str):
+    def _remove(self, str, extra_tags=[]):
         from htmllaundry.utils import remove_empty_tags
         import lxml.etree
         fragment = lxml.etree.fromstring(str)
-        fragment = remove_empty_tags(fragment)
+        fragment = remove_empty_tags(fragment, extra_tags)
         return lxml.etree.tostring(fragment, encoding=six.text_type)
 
     def testRemoveEmptyParagraphElement(self):
@@ -126,6 +126,15 @@ class remove_empty_tags_tests(unittest.TestCase):
         self.assertEqual(
                 self._remove(six.u('<p><a href="blah"></a>Content</p>')),
                 six.u('<p>Content</p>'))
+
+    def testExtraAllowedEmptyTags(self):
+        self.assertEqual(
+            self._remove(
+                six.u('<table><tr><td>Test</td><td></td></tr></table>'),
+                ['td']
+            ),
+            six.u('<table><tr><td>Test</td><td/></tr></table>')
+        )
 
 
 class ForceLinkTargetTests(unittest.TestCase):

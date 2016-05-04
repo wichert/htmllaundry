@@ -44,7 +44,7 @@ def remove_element(el):
     parent.remove(el)
 
 
-def remove_empty_tags(doc):
+def remove_empty_tags(doc, extra_empty_tags=[]):
     """Removes all empty tags from a HTML document. Javascript editors
     and browsers have a nasty habit of leaving stray tags around after
     their contents have been removed. This function removes all such
@@ -54,8 +54,9 @@ def remove_empty_tags(doc):
     This forces whitespace styling to be done using CSS instead of via an
     editor, which almost always produces better and more consistent results.
     """
-
-    legal_empty_tags = frozenset(['br', 'hr', 'img', 'input'])
+    empty_tags = set(['br', 'hr', 'img', 'input'])
+    empty_tags.update(set(extra_empty_tags))
+    legal_empty_tags = frozenset(empty_tags)
 
     if hasattr(doc, 'getroot'):
         doc = doc.getroot()
