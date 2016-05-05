@@ -1,6 +1,12 @@
 *.pyc
 *.pyo
 *.egg
+/.eggs
 /htmllaundry.egg-info
 /build
 /dist
+/bin
+/include/
+/lib
+/pip-selfcheck.json
+

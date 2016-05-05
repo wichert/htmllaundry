@@ -93,6 +93,40 @@ class remove_empty_tags_tests(unittest.TestCase):
                 self._remove(six.u('<div><br/>Test</div>')),
                 six.u('<div>Test</div>'))
 
+    def testDoNotRemoveEmptyAnchorElement(self):
+        # Should not remove empty <a> tag because it's used as an anchor:
+        self.assertEqual(
+                self._remove(six.u('<p><a id="anchor"></a></p>')),
+                six.u('<p><a id="anchor"/></p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a name="anchor" /></p>')),
+                six.u('<p><a name="anchor"/></p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a href="blah" id="anchor"/></p>')),
+                six.u('<p><a href="blah" id="anchor"/></p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a href="blah" name="anchor"/></p>')),
+                six.u('<p><a href="blah" name="anchor"/></p>'))
+
+        # Should not remove <a> tag because it's non-empty:
+        self.assertEqual(
+                self._remove(six.u('<p><a href="blah" name="anchor">Link</a></p>')),
+                six.u('<p><a href="blah" name="anchor">Link</a></p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a name="anchor">Link</a></p>')),
+                six.u('<p><a name="anchor">Link</a></p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a href="anchor">Link</a></p>')),
+                six.u('<p><a href="anchor">Link</a></p>'))
+
+        # Should remove because it's an useless empty tag.
+        self.assertEqual(
+                self._remove(six.u('<p><a href="blah"/>Content</p>')),
+                six.u('<p>Content</p>'))
+        self.assertEqual(
+                self._remove(six.u('<p><a href="blah"></a>Content</p>')),
+                six.u('<p>Content</p>'))
+
     def testExtraAllowedEmptyTags(self):
         self.assertEqual(
             self._remove(

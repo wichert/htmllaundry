@@ -4,7 +4,7 @@ Changelog
 2.1 - Unreleased
 -------------------------
 
-* ...
+* Do not remove empty ``<a>`` tags that could be used as anchors.
 
 
 2.0 - December 2012, 2012
