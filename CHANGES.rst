@@ -2,13 +2,14 @@ Changelog
 =========
 
 2.1 - Unreleased
--------------------------
+----------------
 
 * Do not remove empty ``<a>`` tags that could be used as anchors.
+* When removing empty tags, allow to define additional tags that are considered OK to be empty
 
 
-2.0 - December 2012, 2012
--------------------------
+2.0 - December 7, 2012
+----------------------
 
 * When wrapping unwrapped text do not create separate wrappers for inline
   elements.
