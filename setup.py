@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 import sys
 
-version = '2.1dev'
+version = '2.1'
 
 if sys.version_info < (3, 2):
     extra = {

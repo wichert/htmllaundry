@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.1 - Unreleased
-----------------
+2.1 - May 10, 2016
+------------------
 
 * Do not remove empty ``<a>`` tags that could be used as anchors.
 * When removing empty tags, allow to define additional tags that are considered OK to be empty
